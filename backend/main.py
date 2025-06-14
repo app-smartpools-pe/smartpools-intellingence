@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 HUGGINGFACE_API_KEY = os.getenv("HF_API_KEY")
-API_URL = "https://api-inference.huggingface.co/models/google/flan-t5-small"
+API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom-560m"
 HEADERS = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
 class UserMessage(BaseModel):
