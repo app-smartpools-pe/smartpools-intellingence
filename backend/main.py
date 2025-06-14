@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 HUGGINGFACE_API_KEY = os.getenv("HF_API_KEY")
-API_URL = "https://api-inference.huggingface.co/models/mrm8488/t5-base-finetuned-common_gen"
+API_URL = "https://api-inference.huggingface.co/models/bigscience/bloom-560m"
 HEADERS = {"Authorization": f"Bearer {HUGGINGFACE_API_KEY}"}
 
 class UserMessage(BaseModel):
@@ -15,17 +15,17 @@ class UserMessage(BaseModel):
 async def chat(msg: UserMessage):
     payload = {"inputs": msg.message}
     response = requests.post(API_URL, headers=HEADERS, json=payload)
-
+    
     try:
         data = response.json()
-        # Si la respuesta es una lista con al menos un resultado válido
-        if isinstance(data, list) and len(data) > 0 and "generated_text" in data[0]:
-            generated_text = data[0]["generated_text"]
-        else:
-            generated_text = "La IA no generó respuesta. Revisa si el modelo está activo o disponible."
-    except Exception as e:
-        print("ERROR procesando la respuesta:", e)
-        print("Contenido recibido:", response.text)
-        generated_text = "Ocurrió un error al procesar la respuesta de la IA."
+        print("Respuesta Hugging Face:", data)  # Esto imprimirá en los logs del servidor
 
-    return {"response": generated_text}
+        if isinstance(data, list) and "generated_text" in data[0]:
+            return {"response": data[0]["generated_text"]}
+        elif "error" in data:
+            return {"response": f"Error del modelo: {data['error']}"}
+        else:
+            return {"response": "La IA no generó respuesta. Revisa si el modelo está activo o disponible."}
+    except Exception as e:
+        print("Error al procesar respuesta:", str(e))
+        return {"response": "Ocurrió un error al procesar la respuesta de la IA."}
