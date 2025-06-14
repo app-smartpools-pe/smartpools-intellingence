@@ -1,19 +1,14 @@
 from fastapi import FastAPI, Request
-from fastapi.middleware.cors import CORSMiddleware
-from backend.chatbot import generar_respuesta
+from pydantic import BaseModel
+from transformers import pipeline
 
 app = FastAPI()
+chatbot = pipeline("text2text-generation", model="google/flan-t5-small")
 
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+class UserMessage(BaseModel):
+    message: str
 
 @app.post("/chat")
-async def chat(request: Request):
-    data = await request.json()
-    mensaje = data.get("mensaje", "")
-    respuesta = generar_respuesta(mensaje)
-    return {"respuesta": respuesta}
+async def chat(msg: UserMessage):
+    response = chatbot(msg.message, max_length=100, do_sample=False)[0]["generated_text"]
+    return {"response": response}
