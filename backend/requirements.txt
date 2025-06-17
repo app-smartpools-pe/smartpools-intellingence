@@ -3,4 +3,3 @@ fastapi
 uvicorn
 openai
 python-dotenv
-openai==0.28.1
