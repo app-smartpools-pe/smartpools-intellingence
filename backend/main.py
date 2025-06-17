@@ -1,6 +1,6 @@
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from backend.chatbot import generar_respuesta
+from .chatbot import generar_respuesta
 
 app = FastAPI()
 
