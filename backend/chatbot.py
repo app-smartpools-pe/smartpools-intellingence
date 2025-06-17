@@ -1,8 +1,8 @@
 from transformers import pipeline
 
 # Cargamos un modelo multilingüe de Hugging Face
-modelo = pipeline("text-generation", model="tiiuae/falcon-rw-1b", max_new_tokens=100)
+pipe = pipeline("text-generation", model="EleutherAI/gpt-neo-125M")
 
 def generar_respuesta(mensaje):
-    respuesta = modelo(mensaje)[0]["generated_text"]
+    respuesta = pipe(mensaje)[0]["generated_text"]
     return respuesta.strip()
