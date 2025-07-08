@@ -17,3 +17,5 @@ async def chat(request: Request):
     mensaje = data.get("mensaje", "")
     respuesta = generar_respuesta(mensaje)
     return {"respuesta": respuesta}
+
+print(generar_respuesta("¿Cuáles son los beneficios de tener una piscina con sistema automatizado?"))
